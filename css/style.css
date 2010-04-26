@@ -49,3 +49,7 @@ img {
     color: red;
     text-align: center;
 }
+
+.validator {
+    float: left;
+}

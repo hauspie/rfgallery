@@ -16,7 +16,6 @@ $files = get_files($DirUrl);
 
 
 ?>
-<div id='content'>
 <div id='title'><?
    echo dir_to_nav_links($Dir);
 ?>
@@ -60,7 +59,6 @@ if (count($files["files"]) > 0)
   }
 ?>
 
-</div> <!-- #content -->
 <?
 PrintFoot();
 ?>

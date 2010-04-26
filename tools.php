@@ -5,24 +5,37 @@ require_once("config.php");
 function PrintHead()
 {
 ?>
-<!DOCTYPE 
-  HTML PUBLIC 
-  "-//W3C//DTD HTML 4.01 Transitional//EN" 
-  "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-    <head>
-      <title>Photos</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf8">
-<script type="text/javascript" src="yoxview/yoxview-init.js"></script>
- <link rel="stylesheet" href="css/style.css" type="text/css" /> 
-    </head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head> 
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+  <script type="text/javascript" src="yoxview/yoxview-init.js" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" /> 
+  <title>Photos</title>
+  </head>
 <body>
+<div class="validator">
+<p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10"
+        alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+</p>
+<p>
+    <a href="http://jigsaw.w3.org/css-validator/check/referer">
+        <img style="border:0;width:88px;height:31px"
+            src="http://jigsaw.w3.org/css-validator/images/vcss"
+            alt="Valid CSS!" />
+    </a>
+</p>
+</div>
+<div id='content'>
 <?
 }
 
 function PrintFoot()
 {
 ?>
+</div>
 </body>
 </html>
 <?
@@ -101,14 +114,14 @@ function get_thumbnail($file, $dir)
 
    if (strstr(strtolower($file), ".jpg"))
    {
-      return "<a href=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\"><img alt=\"$file\" src=\"$URL_BASE/$THUMBS_DIR$thedir/$thefile\"></a>";
+      return "<a href=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\"><img alt=\"$file\" src=\"$URL_BASE/$THUMBS_DIR$thedir/$thefile\" /></a>";
    }
    else if (is_dir("$PHOTOS_DIR/$dir/$file"))
    {
      
      $dir_thumb =  get_dir_thumbnail("$THUMBS_DIR/$dir/$file");
      if ($dir_thumb != nil)
-       $ret = "<p class=\"dir_thumb\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\"><img alt=\"$file\" src=\"" . $dir_thumb . "\"></a></p>\n";
+       $ret = "<p class=\"dir_thumb\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\"><img alt=\"$file\" src=\"" . $dir_thumb . "\" /></a></p>\n";
      else
        $ret = "";
    }
