@@ -1,7 +1,6 @@
 <?
 
-$PHOTOS_DIR = "photos";
-
+require_once("config.php");
 
 function PrintHead()
 {
@@ -30,6 +29,13 @@ function PrintFoot()
 }
 
 
+function debug($msg)
+{
+  echo "<p class=\"debug\">\n";
+  echo $msg;
+  echo "</p>\n";
+}
+
 function encode_filename($FileName)
 {
    $enc = rawurlencode($FileName);
@@ -45,84 +51,95 @@ function get_files($Directory)
       return false;
 
    $files = array();
+   $files["dirs"] = array();
+   $files["files"] = array();
    
    while (false !== ($file = readdir($d)))
    {
       if ($file[0] == '.')
 	 continue;
-      if (!is_dir("$Directory/$file"))
-	 if (!strstr(strtolower($file), ".jpg"))
-	    continue;
-	 
-      $files[] = $file;
+      if (is_dir("$Directory/$file"))
+	{
+	  $files["dirs"][] = $file;
+	}
+      else if (strstr(strtolower($file), ".jpg"))
+	$files["files"][] = $file;
    }
-   sort($files);
+   sort($files["dirs"]);
+   sort($files["files"]);
    closedir($d);
    return @$files;
 }
 
-function get_thumbnail($file, $dir, $wish_dir)
+function get_dir_thumbnail($dir)
+{
+  $d = opendir($dir);
+  if ($d)
+    {
+      while (false !== ($f = readdir($d)))
+	{
+	  if (strstr(strtolower($f), ".jpg"))
+	    return encode_filename("$dir/$f");
+	  if (is_dir("$dir/$f") && $f[0] != ".")
+	    return get_dir_thumbnail("$dir/$f");
+	}
+    }
+  closedir($d);
+  return nil;
+}
+
+function get_thumbnail($file, $dir)
 {
    global $PHOTOS_DIR;
+   global $URL_BASE;
+   global $THUMBS_DIR;
+
 
    $thefile = encode_filename($file);
    $thedir = encode_filename($dir);
 
+
    if (strstr(strtolower($file), ".jpg"))
    {
-      if ($wish_dir)
-	 return nil;
-      return "<a href=\"/$PHOTOS_DIR$thedir/$thefile\"><img alt=\"$file\" src=\"/thumbs$thedir/$thefile\"></a>";
+      return "<a href=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\"><img alt=\"$file\" src=\"$URL_BASE/$THUMBS_DIR$thedir/$thefile\"></a>";
    }
-   else if ($wish_dir)
+   else if (is_dir("$PHOTOS_DIR/$dir/$file"))
    {
-      $d = opendir("$PHOTOS_DIR/$dir/$file");
-      if ($d)
-      {
-	 while (false !== ($f = readdir($d)))
-	 {
-	    if (strstr(strtolower($f), ".jpg"))
-	    {
-	       
-	       $thef = encode_filename($f);
-/* 	       $thef = preg_replace("/&/i", "%26", $f); */
-/* 	       $thef = preg_replace("/#/i", "%23", $thef); */
-/* 	       $thef = preg_replace("/\+/i", "%2B", $thef); */
-
-	       $ret = "<a href=\"/?Dir=$thedir/$thefile\"><div class=\"folder\"><img alt=\"$file\" src=\"/thumbs$thedir/$thefile/$thef\"></a>";
-	       break;
-	    }
-	 }
-      }
+     
+     $dir_thumb =  get_dir_thumbnail("$THUMBS_DIR/$dir/$file");
+     if ($dir_thumb != nil)
+       $ret = "<p class=\"dir_thumb\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\"><img alt=\"$file\" src=\"" . $dir_thumb . "\"></a></p>\n";
+     else
+       $ret = "";
    }
-   else
-      return nil;
    
-   $ret = $ret . "<br /> <a href=\"/?Dir=$thedir/$thefile\">$file</a></div>";
+   $ret = $ret . "<p class=\"dir_link\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\">$file</a></p>";
    return $ret;
 }
 
 function dir_to_nav_links($dir)
 {
-   $dirs = preg_replace("/\/\//", "/", $dirs);
-   $dirs = preg_replace("/\/$/", "", $dirs);
-   $dirs = preg_split("/\//", $dir);
-   if ($dirs == nil || count($dirs) <= 2)
-   {
-      return "<a href=\"/\">Home</a>";
-   }
-   $ret = "";
-   $link = "/?Dir=/";
-   foreach ($dirs as $dir)
-   {
+  global $URL_BASE;
+  
+  $dirs = preg_replace("/\/\//", "/", $dirs);
+  $dirs = preg_replace("/\/$/", "", $dirs);
+  $dirs = preg_split("/\//", $dir);
+  if ($dirs == nil)
+    {
+      return "<a href=\"$URL_BASE/\">Home</a>";
+    }
+  $link = "$URL_BASE/?Dir=/";
+  $ret =  "<a href=\"$link\">" . HOME_PAGE_NAME . "</a>";
+  foreach ($dirs as $dir)
+    {
       $link = $link . encode_filename("$dir");
       if ($dir == "")
-	 $dir = "Home";
+	continue;
       else
-	 $link = $link . "/";
-      $ret = $ret . " <a href=\"" . $link . "\">" . $dir . "</a> / ";
-   }
-   return $ret;
+	$link = $link . "/";
+      $ret = $ret . " / <a href=\"" . $link . "\">" . $dir . "</a>";
+    }
+  return $ret;
 }
 
 ?>

@@ -19,12 +19,16 @@ a:hover {
     background: #666666;
 }
 
-td {
+.thumb {
     text-align: center;
     padding: 5px;
+    display: inline;
+    float: left;
+    width: 390px;
 }
 
-td:hover {
+
+.thumb:hover {
     background: #666666;
     text-align: center;
 }
@@ -39,12 +43,9 @@ img {
     text-align: center;
 }
 
-table {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-}
-
-table tr td {
-    width: 33%;
+.debug {
+    border: 1px solid black;
+    background: black;
+    color: red;
+    text-align: center;
 }
