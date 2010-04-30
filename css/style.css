@@ -80,6 +80,10 @@ img {
     text-align: center;
 }
 
-.validator {
-    float: left;
+.error {
+    border: 3px solid red;
+    background: black;
+    color: red;
+    font-size: large;
+    text-align: center;
 }

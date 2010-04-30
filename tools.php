@@ -58,8 +58,17 @@ function debug($msg)
 {
   echo "<p class=\"debug\">\n";
   echo $msg;
-  echo "</p>\n";
+  echo "\n</p>\n";
 }
+
+function error($msg)
+{
+  echo "<p class=\"error\">\n";
+  echo "Software Failure. $msg <br />";
+  echo "Guru meditation\n";
+  echo "\n</p>\n";
+}
+
 
 function encode_filename($FileName)
 {
@@ -70,10 +79,14 @@ function encode_filename($FileName)
 
 function get_files($Directory)
 {
+  
+  if (!is_dir($Directory))
+    return nil;
+
    $d = opendir($Directory);
 
    if (!$d)
-      return false;
+      return nil;
 
    $files = array();
    $files["dirs"] = array();

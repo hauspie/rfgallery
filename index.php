@@ -31,7 +31,12 @@ $DirUrl = $PHOTOS_DIR . "$Dir";
 # Get the file list
 $files = get_files($DirUrl);
 
-
+if ($files == nil)
+  {
+    error("Folder does not exist");
+    PrintFoot();
+    exit;
+  }
 
 ?>
 <div id='title'><?
