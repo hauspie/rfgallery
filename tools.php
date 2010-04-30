@@ -31,7 +31,7 @@ function PrintHead()
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
 <head> 
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
-  <meta name="Generator" content="rfGallery. http://git.fairy-project.org/?p=rfGallery.git">
+  <meta name="Generator" content="rfGallery. http://git.fairy-project.org/?p=rfGallery.git" />
   <script type="text/javascript" src="yoxview/yoxview-init.js"></script>
   <link rel="stylesheet" href="css/style.css" type="text/css" /> 
   <title><? echo HOME_PAGE_NAME ?></title>
