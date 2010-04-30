@@ -31,5 +31,8 @@ $THUMBS_DIR = "thumbs";
  */
 define(HOME_PAGE_NAME, "Photos");
 
+/* The message displayed as copyright notice */
+define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://git.fairy-project.org/?p=rfGallery.git\">rfGallery</a>");
+
 
 ?>
