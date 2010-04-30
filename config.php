@@ -1,8 +1,34 @@
 <?
+/* This file is part of rfGallery.
+ * 
+ * rfGallery is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, either version 3 of the License, or 
+ * (at your option) any later version. 
+ *  
+ * rfGallery is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details. 
+ *  
+ * You should have received a copy of the GNU General Public License 
+ * along with rfGallery.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Author: Michael Hauspie <mickey AT fairy-project DOT org>
+ */
 
+/* The folder where the original photos are 
+ * relative to document root
+ */
 $PHOTOS_DIR = "photos";
+/* The folder where the thumbnails of the photos
+ * are, also relative to document root
+ */
 $THUMBS_DIR = "thumbs";
 
+/* The home page name. Will be displayed as page title and as
+ * first link of the navigation bar.
+ */
 define(HOME_PAGE_NAME, "Photos");
 
 
