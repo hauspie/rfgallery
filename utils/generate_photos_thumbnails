@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# This file is part of rfGallery.
+# 
+# rfGallery is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by 
+# the Free Software Foundation, either version 3 of the License, or 
+# (at your option) any later version. 
+#  
+# rfGallery is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+# GNU General Public License for more details. 
+#  
+# You should have received a copy of the GNU General Public License 
+# along with rfGallery.  If not, see <http://www.gnu.org/licenses/>. 
+#
+# Author: Michael Hauspie <mickey AT fairy-project DOT org>
+#
+#
+# Generate thumbnail recursively
+#
+# $1: source dir
+# $2: dest dir
+# $3: size
+
+
+#set -x
+
+# convert one picture, same parameters
+function convert_picture()
+{
+    file "$1" | grep image >& /dev/null || return 1
+    echo "Generating $2 from $1 (size $3)"
+    convert -thumbnail "x$3" "$1" "$2"
+}
+
+# usage
+function help()
+{
+    cat 1>&2 <<EOF
+Usage: `basename $0` <source> <destination> <thumbnail_size>
+EOF
+}
+
+SOURCE="$1"
+DESTINATION="$2"
+SIZE="$3"
+
+if test $# -lt 3
+then
+    help
+    exit 1
+fi
+
+
+# if source is not a directory, generate the thumbnail of a single file
+if ! test -d "$SOURCE"
+then
+    # Check if destination is a directory
+    # If so, generate the thumbnail in that directory
+    # else, the destination is the name of the thumbnail file
+    if ! test -d "$DESTINATION"
+    then
+	# destination is a file
+	convert_picture "$SOURCE" "$DESTINATION" "$SIZE"
+    else
+	DESTINATION_FILE_NAME=`basename "$SOURCE"`
+	# strip trailing /
+	DESTINATION=`cd "$DESTINATION" ; pwd`
+	DESTINATION_FILE="$DESTINATION/$DESTINATION_FILE_NAME"
+	convert_picture "$SOURCE" "$DESTINATION_FILE" "$SIZE"
+    fi
+    exit 0
+fi
+
+
+if ! test -d "$DESTINATION"
+then
+    echo "$DESTINATION is not a directory" 1>&2
+    exit 1
+fi
+
+# get absolute path names
+SOURCE=`(cd "$SOURCE" && pwd)`
+DESTINATION=`(cd "$DESTINATION" && pwd)`
+
+cd "$SOURCE"
+for i in *
+do
+    # directory create destination dir and do a recursive call
+    if test -d "$i"
+    then
+	mkdir -p "$DESTINATION/$i"
+	$0 "$SOURCE/$i" "$DESTINATION/$i" "$SIZE" "$4"
+    fi
+    if ! test -r "$DESTINATION/$i"
+    then
+	convert_picture "$SOURCE/$i" "$DESTINATION/$i" "$SIZE"
+    else
+	# if file exists, convert only if source is newer than thumbnail
+	if test "$SOURCE/$i" -nt "$DESTINATION/$i" -o "x$4" = "x--force"
+	then
+	    convert_picture "$SOURCE/$i" "$DESTINATION/$i" "$SIZE"
+	fi
+    fi
+done
