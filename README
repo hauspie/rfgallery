@@ -9,6 +9,7 @@ thumbnails using imagemagick is provided in the utils/ folder.
 It uses the jQuery plugin yoxview <http://www.yoxigen.com/yoxview/> to
 display slideshow of your photos.
 
+Some graphic files used come from the Open Icon Library <http://openiconlibrary.sourceforge.net/>
 
 REQUIREMENTS
 ------------

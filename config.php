@@ -34,5 +34,9 @@ define(HOME_PAGE_NAME, "Photos");
 /* The message displayed as copyright notice */
 define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://git.fairy-project.org/?p=rfGallery.git\">rfGallery</a>");
 
+/* Maximum depth for looking for an album thumbnail
+ * Set to -1 for no limit, 1 for no recursive search
+ */
+$ALBUM_THUMBNAIL_MAX_DEPTH = 1;
 
 ?>

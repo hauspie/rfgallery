@@ -22,7 +22,7 @@ require_once("config.php");
 $URL_BASE = preg_replace("/\?.*$/", "", $_SERVER['REQUEST_URI']);
 $URL_BASE = preg_replace("/\/[^\/]*$/", "",$URL_BASE);
 
-
+define(DEFAULT_ALBUM_THUMBNAIL, "pics/folder-photo2.png");
 
 function PrintHead()
 {
@@ -96,8 +96,14 @@ function get_files($Directory)
    return @$files;
 }
 
-function get_dir_thumbnail($dir)
+
+function get_dir_thumbnail_recursive($dir, $depth)
 {
+  global $ALBUM_THUMBNAIL_MAX_DEPTH;
+
+  if ($ALBUM_THUMBNAIL_MAX_DEPTH - $depth <= -1)
+    return DEFAULT_ALBUM_THUMBNAIL;
+
   $d = opendir($dir);
   if ($d)
     {
@@ -106,11 +112,19 @@ function get_dir_thumbnail($dir)
 	  if (strstr(strtolower($f), ".jpg"))
 	    return encode_filename("$dir/$f");
 	  if (is_dir("$dir/$f") && $f[0] != ".")
-	    return get_dir_thumbnail("$dir/$f");
+	    {
+	      if ( $ALBUM_THUMBNAIL_MAX_DEPTH - $depth > -1)
+		return get_dir_thumbnail_recursive("$dir/$f",$depth + 1);
+	    }
 	}
     }
   closedir($d);
-  return nil;
+  return DEFAUTL_ALBUM_THUMBNAIL;
+}
+
+function get_dir_thumbnail($dir)
+{
+  return get_dir_thumbnail_recursive($dir, 1);
 }
 
 function get_thumbnail($file, $dir)
@@ -135,7 +149,7 @@ function get_thumbnail($file, $dir)
      if ($dir_thumb != nil)
        $ret = "<p class=\"dir_thumb\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\"><img alt=\"$file\" src=\"" . $dir_thumb . "\" /></a></p>\n";
      else
-       $ret = "";
+       $ret = "nirf";
    }
    
    $ret = $ret . "<p class=\"dir_link\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\">$file</a></p>";
