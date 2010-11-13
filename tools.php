@@ -103,7 +103,7 @@ function get_files($Directory)
       else if (strstr(strtolower($file), ".jpg"))
 	$files["files"][] = $file;
    }
-   sort($files["dirs"]);
+   rsort($files["dirs"]);
    sort($files["files"]);
    closedir($d);
    return @$files;
