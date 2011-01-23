@@ -1,0 +1,5 @@
+* Test with another web server (nginx)
+* Allow to have a crypted version of the path so that the url does not reflect
+  what is on the site. When accessing a folder like that, the top links should
+  not be present. This would allow an "safer" way to make some albums public or 
+  semi-public.

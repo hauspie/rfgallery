@@ -17,7 +17,8 @@ A web server with php5 installed and working
 
 INSTALLATION
 ------------
-You simply have to put it in an apache virtual host with index.php as DirectoryIndex.
+You simply have to put it in a virtual host with index.php as index
+
 Here is an example of apache2 configuration for this tool to work:
 
 <VirtualHost *:80>
