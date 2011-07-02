@@ -4,7 +4,7 @@ is used.
 
 It does not generate thumbnails for you. You have to generate the
 thumbnails by yourself. A sample script to recursively generate photos
-thumbnails using imagemagick is provided in the utils/ folder.
+thumbnails using imagemagick is provided in the tools/ folder.
 
 It uses the jQuery plugin yoxview <http://www.yoxigen.com/yoxview/> to
 display slideshow of your photos.
