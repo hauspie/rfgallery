@@ -1,5 +1,5 @@
 ﻿/*!
- * YoxView Picasa plugin
+ * Yox Picasa plugin
  * http://yoxigen.com/yoxview/
  *
  * Copyright (c) 2010 Yossi Kolesnicov
@@ -7,307 +7,191 @@
  * Licensed under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 1st April, 2010
- * Version : 1.2
+ * Date: 13th November, 2010
+ * Version : 1.55
  */
-function yoxview_picasa()
+function yox_picasa()
 {
     var $ = jQuery;
-    this.getImagesData = function(yoxviewApi, container, _options, dataOptions)
+    var picasaRegex = /http:\/\/picasaweb\.google\.\w+\/([^\/#\?]+)\/?([^\/#\?]+)?(\?([^#]*))?/
+    var self = this;
+    
+    this.getImagesData = function(options, callback)
     {
         var defaults = {
-            url: "http://picasaweb.google.com/data/feed/api/user/",
+            url: "http://picasaweb.google.com/data/feed/api/",
             setThumbnail: true,
             setSingleAlbumThumbnails: true,
-            setTitle: true // Whether to add a header with user and/or album name before thumbnails
-        };
-
-        var options = jQuery.extend({}, defaults, dataOptions.dataSourceOptions);
+            setTitle: true, // Whether to add a header with user and/or album name before thumbnails
+			alt: 'json',
+			thumbsize: 64
+        },
+        picasaThumbnailSizes = [32, 48, 64, 72, 104, 144, 150, 160],
+        picasaImgMaxSizes = [94, 110, 128, 200, 220, 288, 320, 400, 512, 576, 640, 720, 800, 912, 1024, 1152, 1280, 1440, 1600],
+        fromDataUrl = {};
         
-        if (options.album == "")
-            options.album = null;
-            
-        if (options.imagesMaxSize)
-            options.imagesMaxSize = picasa_getMaxSize(options.imagesMaxSize, picasaImgMaxSizes);
-
-        var screenSize = screen.width > screen.height ? screen.width : screen.height;
-        
-        // Save resources for smaller screens:
-        if (!options.imagesMaxSize || screenSize < options.imagesMaxSize)
-            options.imagesMaxSize = picasa_getMaxSize(screenSize, picasaImgMaxSizes);
-
-        if (options.thumbnailsMaxSize)
-            options.thumbnailsMaxSize = picasa_getMaxSize(options.thumbnailsMaxSize, picasaThumbnailSizes);
-
-        var feedUrl = getFeedUrl(options);
-        
-        var images = new Array();
-        var _viewIndex = container.data("yoxview").viewIndex;
-        
-        // Load single album:
-        if (options.album)
+        function getFeedUrl()
         {
-            if (dataOptions.onLoadBegin)
-                dataOptions.onLoadBegin();
-                
-            $.jsonp({
-                url: feedUrl,
-                async: false,
-                dataType: 'jsonp',
-                callbackParameter: "callback",
-                success: function(data)
-                {
-                    var thumbnail;
-                    var thumbnailData = data.feed;
-                    var albumTitle = thumbnailData.title.$t;
-                    
-                    if (!options.setSingleAlbumThumbnails && options.setThumbnail)
-                    {
-                        var albumTitle = albumTitle + " (" + thumbnailData.gphoto$numphotos.$t + " images)";
-                        thumbnail = createThumbnail(
-                            thumbnailData.link[1].href,
-                            albumTitle,
-                            albumTitle,
-                            thumbnailData.icon.$t,
-                            container.data("yoxview").viewIndex);
-                        
-                        thumbnail.bind("click.yoxview", function(){
-                            var imageData = $(this).data("yoxview");
-                            yoxviewApi.openGallery(imageData.viewIndex);
-                            return false;
-                        });
-                        
-                        thumbnail.appendTo(container);
-                        yoxviewApi.thumbnail = thumbnail;
-                    }
-                    
-                    picasa_getImagesDataFromJson(data, thumbnail, images);
+            var feedUrl = datasourceOptions.url;
+		    if (datasourceOptions.user && datasourceOptions.user != "lh")
+		    {
+			    feedUrl += "user/" + datasourceOptions.user;
+			    if (datasourceOptions.album)
+				    feedUrl += "/album/" + datasourceOptions.album;
+            }
+            else
+			    feedUrl += "all";
 
-                    if (options.setSingleAlbumThumbnails && images.length != 0)
-                    {
-                        container.addClass("yoxview-thumbnails");
-                        
-                        if (options.setTitle)
-                        {
-                            var albumDetails = $("<div>", {
-                                className : "yoxview-thumbnails-details"
-                            });
-                            
-                            var authorData = data.feed.author[0];
-                            
-                            albumDetails.append(
-                                "<h2>" + albumTitle + "</h2>",
-                                "By ",
-                                "<a href='" + authorData.uri.$t + "' title=\"Go to " + authorData.name.$t + "'s Picasa page\" target='_blank'>" + authorData.name.$t + "</a>",
-                                "<div style='clear:both;'></div>"
-                            )
-                            .prependTo(container);
-                        }
-                        $.each(images, function(imageIndex, imageData)
-                        {
-                            var thumbnail = createThumbnail(
-                                imageData.src,
-                                imageData.alt,
-                                imageData.title,
-                                imageData.thumbnailSrc
-                            );
-                            imageData.thumbnailImg = thumbnail.children("img:first");
-                            
-                            thumbnail.data("yoxview", { viewIndex : _viewIndex, imageIndex : imageIndex })
-                            .bind("click.yoxview", function(){
-                                var imageData = $(this).data("yoxview");
-                                yoxviewApi.openGallery(imageData.viewIndex, imageData.imageIndex);
-                                return false;
-                            })
-                            .appendTo(container);
-                        });
-                    }
-                    if (dataOptions.onLoadComplete)
-                        dataOptions.onLoadComplete();
-                },
-                error : function(xOptions, textStatus){
-                    if (dataOptions.onLoadError)
-                        dataOptions.onLoadError("Album '" + options.album + "' for user '" + options.user + "' not found.");
-                }
-            });
+            return feedUrl;
         }
-        // Load multiple albums:
-        else
+        
+        function picasa_getMaxSize(size, sizesArray, roundSizeUp)
         {
-            var thumbnailsWithAlbums = 0;
-            var picasaRegex = /http:\/\/picasaweb.google.*\/([^\/]+)\/([^\?]+).*/;
+            size = parseInt(size);
+            for(var i=sizesArray.length - 1; i >= 0; i--)
+            {
+                var pSize = sizesArray[i];
+                if (size >= pSize)
+                    return roundSizeUp 
+                        ? i < sizesArray.length - 1 ? sizesArray[i + 1] : pSize
+                        : pSize;
+            }
             
-            container.find("a:has(img)").each(function(){
-                var thumbnail = $(this);
-                var urlMatch = this.href.match(picasaRegex);
-                if (urlMatch)
+            return size;
+        }
+        
+        function getImagesDataFromJson(data, kind)
+        {
+            var entry = data.feed.entry;
+            var isAlbum = kind === "album";
+            var imagesData = [];
+            jQuery.each(data.feed.entry, function(i, image){
+                var imageTitle = isAlbum ? image.title.$t + " (" + image.gphoto$numphotos.$t + " images)" : image.summary.$t;
+                
+                if (!datasourceOptions.filter || imageTitle.match(datasourceOptions.filter))
                 {
-                    var picasaInfo = { user : urlMatch[1], album : urlMatch[2] };
-                    var thumbnailData = thumbnail.data("yoxview");
-                    
-                    if (thumbnailData)
-                        jQuery.extend(thumbnailData, picasaInfo);
-                    else
-                        thumbnail.data("yoxview", picasaInfo);
-                    
-                    var viewData = thumbnail.parent().data("yoxview");
-                    
-                    thumbnail.bind("click.yoxview", function(){
-                        var thumbnailData = $(this).data("yoxview");
-                        
-                        if (!viewData.imagesAreSet)
-                        {
-                            thumbnail.css("cursor", "wait");
-
-                            $.ajax({
-                                url: getFeedUrl(jQuery.extend(options, thumbnailData)),
-                                dataType: 'jsonp',
-                                success: function(data)
-                                {
-                                    var imagesData = new Array();
-                                    picasa_getImagesDataFromJson(data, thumbnail, imagesData);
-                                    viewData.images = imagesData;
-                                    viewData.imagesAreSet = true;
-                                    thumbnail.css("cursor", "");
-                                    yoxviewApi.openGallery(viewData.viewIndex);
-                                }
-                            });
+                    var mediaData = image.media$group.media$content[0];
+                    var imageData = {
+                        thumbnailSrc : image.media$group.media$thumbnail[1].url,
+                        link: image.link[1].href,
+                        media: {
+                            src: mediaData.url,
+                            title: imageTitle,
+                            alt: imageTitle,
+                            width: mediaData.width,
+                            height: mediaData.height
                         }
-                        else
-                            yoxviewApi.openGallery(thumbnail.parent().data("yoxview").viewIndex);
-                            
-                        return false;
-                    });
-                    thumbnailsWithAlbums++;
+                    };
+
+                    if (isAlbum)
+                        imageData.data = { album: image.gphoto$name.$t };
+
+                    imagesData.push(imageData);
                 }
             });
-            
-            if (thumbnailsWithAlbums == 0)
+
+            if (fromDataUrl.filter)
             {
-                if (dataOptions.onLoadBegin)
-                    dataOptions.onLoadBegin();
+                var dataUrlObj = Yox.getUrlData(options.dataUrl);
+                delete dataUrlObj.queryFields.filter;
+                options.dataUrl = Yox.urlDataToPath(dataUrlObj);
+            }
+            if (options.dataSourceOptions && options.dataSourceOptions.filter)
+                delete options.dataSourceOptions.filter;
 
-                $.jsonp({
-                    url: feedUrl,
-                    dataType: 'jsonp',
-                    callbackParameter: "callback",
-                    success: function(data)
-                    {
-                        if (!data.feed.entry)
-                        {
-                            if (dataOptions.onNoData)
-                                dataOptions.onNoData();
-                                
-                            return;
-                        }
-
-                        if (options.setTitle)
-                        {
-                            var authorData = data.feed.author[0];
-                            var albumDetails = $("<div>", {
-                                className : "yoxview-thumbnails-details"
-                            });
-                            
-                            albumDetails.append(
-                                "<h2><a href='" + authorData.uri.$t + "' target='_blank' title=\"Go to " + authorData.name.$t + "'s gallery in Picasa\">" + authorData.name.$t + "</a>'s gallery</h2>",
-                                "<div style='clear:both;'></div>"
-                            )
-                            .prependTo(container);
-                        }
-                        var thumbnailsList = $("<ul>", {
-                            className : "yoxview-thumbnails"
-                        });
-                        thumbnailsList.appendTo(container);
-                        
-                        jQuery.each(data.feed.entry, function(i, album){
-                    
-                            if (album.gphoto$numphotos.$t != '0')
-                            {
-                                var albumName = album.title.$t + " (" + album.gphoto$numphotos.$t + " images)";
-                                var albumThumbnail = album.media$group.media$thumbnail[0].url;
-                                var albumUrl = album.link[1].href;
-                                var listItem = $("<li>", {
-                                    css: {
-                                        "width" : album.media$group.media$thumbnail[0].width,
-                                        "height" : album.media$group.media$thumbnail[0].height
-                                    }
-                                });
-
-                                var thumbnail = createThumbnail(
-                                    albumUrl,
-                                    albumName,
-                                    albumName,
-                                    albumThumbnail,
-                                    _viewIndex);
-                                    
-                                thumbnail.data("yoxview", {user : options.user, album : albumName })
-                                .appendTo(listItem);
-                                
-                                listItem.appendTo(thumbnailsList)
-                                .yoxview(_options, dataOptions);
-                            }
-                        });
-                        
-                        if (dataOptions.onLoadComplete)
-                            dataOptions.onLoadComplete();
-                    },
-                    error : function(xOptions, textStatus){
-                        if (dataOptions.onLoadError)
-                            dataOptions.onLoadError("User '" + options.user + "' not found.");
-                    }
-                });   
+            return imagesData;
+        }
+        
+        if (options.dataUrl)
+        {
+            var urlMatch = options.dataUrl.match(picasaRegex);
+            if (urlMatch && urlMatch.length > 1)
+            {
+                fromDataUrl.user = urlMatch[1];
+                if (urlMatch[2])
+                    fromDataUrl.album = urlMatch[2]
+				if (urlMatch[4])
+					$.extend(fromDataUrl, Yox.queryToJson(urlMatch[4]));
             }
         }
 
-        return images;
-    }
-
-    var picasaThumbnailSizes = [32, 48, 64, 72, 104, 144, 150, 160];
-    var picasaImgMaxSizes = [94, 110, 128, 200, 220, 288, 320, 400, 512, 576, 640, 720, 800, 912, 1024, 1152, 1280, 1440, 1600];
-
-    function getFeedUrl(options)
-    {
-        var feedUrl = options.url + options.user;
+        var datasourceOptions = jQuery.extend({}, defaults, fromDataUrl, options.dataSourceOptions);
         
-        if (options.album)
-            feedUrl += "/album/" + options.album;
+		if (datasourceOptions.user && !datasourceOptions.album && !datasourceOptions.q)
+			datasourceOptions.thumbsize = 104;
+			
+        // Picasa web uses 'tags', while the API uses 'tag':
+        if (datasourceOptions.tags)
+            datasourceOptions.tag = datasourceOptions.tags;
             
-        feedUrl += "?imgmax=" + options.imagesMaxSize + "&alt=json";
-        
-        if (options.thumbnailsMaxSize)
-            feedUrl += "&thumbsize=" + options.thumbnailsMaxSize;
+        if (datasourceOptions.album == "")
+            delete datasourceOptions.album;
 
-        if (options.authkey)
-            feedUrl += "&authkey=" + options.authkey;
-            
-        return feedUrl;
-    }
-    function picasa_getMaxSize(size, sizesArray)
-    {
-        for(var i=sizesArray.length; i >= 0; i--)
-        {
-            size = parseInt(size);
-            var pSize = sizesArray[i];
-            if (size >= pSize)
-                return pSize;
+        var screenSize = screen.width > screen.height ? screen.width : screen.height;
+        var unknownSize = datasourceOptions.imgmax && $.inArray(datasourceOptions.imgmax, picasaImgMaxSizes) == -1 ? datasourceOptions.imgmax : null;
+
+        // Save resources for smaller screens:
+        if (!datasourceOptions.imgmax || unknownSize || screenSize < datasourceOptions.imgmax)
+            datasourceOptions.imgmax = picasa_getMaxSize(unknownSize || screenSize, picasaImgMaxSizes, datasourceOptions.roundSizeUp);
+
+        if (datasourceOptions.filter){
+            if (typeof datasourceOptions.filter === "string")
+                datasourceOptions.filter = new RegExp(datasourceOptions.filter, "i");
         }
-        
-        return size;
-    }
-    function picasa_getImagesDataFromJson(data, thumbnail, imagesData)
-    {
-        jQuery.each(data.feed.entry, function(i, image){
-            var imageTitle = image.summary.$t;
-            var imageData = {
-                thumbnailSrc : image.media$group.media$thumbnail[0].url,
-                src: image.content.src,
-                title: imageTitle,
-                alt: imageTitle,
-                link: image.link[1].href,
-                thumbnailImg: thumbnail ? thumbnail.children("img:first") : null
-            };
 
-            imagesData.push(imageData);
+        var feedUrl = getFeedUrl(datasourceOptions);
+        var returnData = {};
+
+        if (options.onLoadBegin)
+            options.onLoadBegin();
+
+        $.jsonp({
+            url: feedUrl,
+            async: false,
+            dataType: 'jsonp',
+			data: datasourceOptions,
+            callbackParameter: "callback",
+            success: function(data)
+            {console.log(data);
+                if (!data.feed.entry || data.feed.entry.length == 0)
+                {
+                    if (options.onNoData)
+                        options.onNoData();
+                        
+                    return;
+                }
+                
+                var kind = data.feed.entry[0].category[0].term.match(/.*#(.*)/)[1]; // album or photo
+                if (kind === "album")
+                    $.extend(returnData, {
+                        title: data.feed.title.$t,
+                        createGroups: true
+                    });
+
+                returnData.images = getImagesDataFromJson(data, kind);
+                if (data.feed.title)
+                    returnData.title = data.feed.title.$t;
+                
+                if (returnData.images.length > 0 && datasourceOptions.setThumbnail && !datasourceOptions.setSingleAlbumThumbnails)
+                {
+                    $.extend(returnData, {
+                        isGroup: true,
+                        link: data.feed.link[1].href,
+                        thumbnailSrc: data.feed.icon.$t,
+						title: data.feed.title.$t
+                    });
+                }
+                
+                if (callback)
+                    callback(returnData);
+
+                if (options.onLoadComplete)
+                    options.onLoadComplete();
+            },
+            error : function(xOptions, textStatus){
+                if (options.onLoadError)
+                    options.onLoadError("Picasa plugin encountered an error while retrieving data");
+            }
         });
     }
 }
