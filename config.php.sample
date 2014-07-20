@@ -29,10 +29,10 @@ $THUMBS_DIR = "thumbs";
 /* The home page name. Will be displayed as page title and as
  * first link of the navigation bar.
  */
-define(HOME_PAGE_NAME, "Photos");
+define("HOME_PAGE_NAME", "Photos");
 
 /* The message displayed as copyright notice */
-define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://git.fairy-project.org/?p=rfGallery.git\">rfGallery</a>");
+define("FOOTER_MESSAGE", "Gallery provided by <a href=\"http://git.fairy-project.org/?p=rfGallery.git\">rfGallery</a>");
 
 /* Maximum depth for looking for an album thumbnail
  * Set to -1 for no limit, 1 for no recursive search
