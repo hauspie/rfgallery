@@ -73,7 +73,7 @@ define(HOME_PAGE_NAME, "Photos");
 This name is used for the page titles and as the first navigation link.
 
 * You can change the copyright notice by changing the define:
-define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://git.fairy-project.org/?p=rfGallery.git\">rfGallery</a>");
+define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://github.com/hauspie/rfgallery\">rfGallery</a>");
 
 
 SECURITY
