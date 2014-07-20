@@ -31,4 +31,4 @@ function getYoxviewPath()
     return null;
 }
 // Remove the next line's comment to apply yoxview without knowing jQuery to all containers with class 'yoxview':
-//LoadScript(yoxviewPath + "yoxview-nojquery.js"); 
+LoadScript(yoxviewPath + "yoxview-nojquery.js"); 
