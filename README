@@ -51,7 +51,7 @@ CONFIGURATION
 -------------
 
 All you have to do is to setup the photo and thumbnails folder in the
-config.php
+config.php (a config.php.sample file is given for reference)
 
 $PHOTOS_DIR = "photos";
 $THUMBS_DIR = "thumbs";
