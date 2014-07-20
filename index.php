@@ -31,7 +31,7 @@ $DirUrl = $PHOTOS_DIR . "$Dir";
 # Get the file list
 $files = get_files($DirUrl);
 
-if ($files == nil)
+if ($files == false)
   {
     error("Folder does not exist");
     PrintFoot();
@@ -54,7 +54,7 @@ if (count($files["dirs"]) > 0)
     foreach ($files["dirs"] as $d)
       {
 	$thumb = get_thumbnail($d, $Dir);
-	if ($thumb != nil)
+	if ($thumb != false)
 	  {
 	    echo "<div class=\"thumb\">\n" . $thumb . "\n</div>\n";
 	    $i++;
@@ -72,7 +72,7 @@ if (count($files["files"]) > 0)
     foreach ($files["files"] as $f)
       {
 	$thumb = get_thumbnail($f, $Dir);
-	if ($thumb != nil)
+	if ($thumb != false)
 	  {
 	    echo "<div class=\"thumb\">\n" . $thumb  . "\n</div>\n";
 	    $i++;

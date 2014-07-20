@@ -81,12 +81,12 @@ function get_files($Directory)
 {
   
   if (!is_dir($Directory))
-    return nil;
+    return false;
 
    $d = opendir($Directory);
 
    if (!$d)
-      return nil;
+      return false;
 
    $files = array();
    $files["dirs"] = array();
@@ -159,7 +159,7 @@ function get_thumbnail($file, $dir)
    {
      
      $dir_thumb =  get_dir_thumbnail("$THUMBS_DIR/$dir/$file");
-     if ($dir_thumb != nil)
+     if ($dir_thumb != false)
        $ret = "<p class=\"dir_thumb\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\"><img alt=\"$file\" src=\"" . $dir_thumb . "\" /></a></p>\n";
      else
        $ret = "nirf";
@@ -176,7 +176,7 @@ function dir_to_nav_links($dir)
   $dirs = preg_replace("/\/\//", "/", $dirs);
   $dirs = preg_replace("/\/$/", "", $dirs);
   $dirs = preg_split("/\//", $dir);
-  if ($dirs == nil)
+  if ($dirs == false)
     {
       return "<a href=\"$URL_BASE/\">Home</a>";
     }
