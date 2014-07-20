@@ -173,9 +173,9 @@ function dir_to_nav_links($dir)
 {
   global $URL_BASE;
   
-  $dirs = preg_replace("/\/\//", "/", $dirs);
+  $dirs = preg_replace("/\/\//", "/", $dir);
   $dirs = preg_replace("/\/$/", "", $dirs);
-  $dirs = preg_split("/\//", $dir);
+  $dirs = preg_split("/\//", $dirs);
   if ($dirs == false)
     {
       return "<a href=\"$URL_BASE/\">Home</a>";
