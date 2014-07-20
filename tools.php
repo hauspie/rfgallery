@@ -22,7 +22,7 @@ require_once("config.php");
 $URL_BASE = preg_replace("/\?.*$/", "", $_SERVER['REQUEST_URI']);
 $URL_BASE = preg_replace("/\/[^\/]*$/", "",$URL_BASE);
 
-define(DEFAULT_ALBUM_THUMBNAIL, "pics/folder-photo2.png");
+define('DEFAULT_ALBUM_THUMBNAIL', "pics/folder-photo2.png");
 
 function PrintHead()
 {
