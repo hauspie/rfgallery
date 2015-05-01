@@ -1,4 +1,4 @@
-<?
+<?php
 /* This file is part of rfGallery.
  * 
  * rfGallery is free software: you can redistribute it and/or modify
@@ -34,23 +34,23 @@ function PrintHead()
   <meta name="Generator" content="rfGallery. http://git.fairy-project.org/?p=rfGallery.git" />
   <script type="text/javascript" src="yoxview/yoxview-init.js"></script>
   <link rel="stylesheet" href="css/style.css" type="text/css" /> 
-  <title><? echo HOME_PAGE_NAME ?></title>
+  <title><?php echo HOME_PAGE_NAME ?></title>
   </head>
 <body>
 <div id='content'>
-<?
+<?php
 }
 
 function PrintFoot()
 {
 ?>
 <p id="copyright">
-    <?echo FOOTER_MESSAGE?>
+    <?php echo FOOTER_MESSAGE?>
 </p>
 </div>
 </body>
 </html>
-<?
+<?php
 }
 
 

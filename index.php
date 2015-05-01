@@ -1,4 +1,4 @@
-<?
+<?php
 /* This file is part of rfGallery.
  * 
  * rfGallery is free software: you can redistribute it and/or modify
@@ -39,13 +39,13 @@ if ($files == false)
   }
 
 ?>
-<div id='title'><?
+<div id='title'><?php
    echo dir_to_nav_links($Dir);
 ?>
 </div>
 
 
-<?
+<?php
 
 if (count($files["dirs"]) > 0)
   {
@@ -82,6 +82,6 @@ if (count($files["files"]) > 0)
   }
 ?>
 
-<?
+<?php
 PrintFoot();
 ?>
