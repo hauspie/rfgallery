@@ -1,1 +1,6 @@
 *~
+.htaccess
+.htpasswd
+photos
+thumbs
+config.php
