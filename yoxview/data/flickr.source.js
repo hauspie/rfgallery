@@ -1,11 +1,11 @@
 ﻿/*!
  * Yox Flickr plugin
- * http://yoxigen.com/yoxview/
+ * https://yoxigen.com/yoxview/
  *
  * Copyright (c) 2010 Yossi Kolesnicov
  *
  * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  *
  * Date: 17th July, 2010
  * Version : 1.6
@@ -13,11 +13,11 @@
 function yox_flickr()
 {
     var $ = jQuery,
-        flickrUrl = "http://www.flickr.com/",
-        flickrApiUrl = "http://api.flickr.com/services/rest/",
+        flickrUrl = "https://www.flickr.com/",
+        flickrApiUrl = "https://api.flickr.com/services/rest/",
         yoxviewFlickrApikey = "cd6c91f9721f34ead20e6ebe03dd5871",
         flickrUserIdRegex = /\d+@N\d+/,
-	    flickrUrlRegex = /http:\/\/(?:www\.)?flickr\.com\/(\w+)\/(?:([^\/]+)\/(?:(\w+)\/?(?:([^\/]+)\/?)?)?)?(?:\?(.*))?/,
+	    flickrUrlRegex = /https:\/\/(?:www\.)?flickr\.com\/(\w+)\/(?:([^\/]+)\/(?:(\w+)\/?(?:([^\/]+)\/?)?)?)?(?:\?(.*))?/,
         self = this,
         fixedOptions = {
             api_key: yoxviewFlickrApikey,
@@ -214,7 +214,7 @@ function yox_flickr()
     };
     function getImageUrl(photoData, size)
     {
-        return "http://farm" + photoData.farm + ".static.flickr.com/" + photoData.server + "/" + (photoData.primary || photoData.id) + "_" + photoData.secret + size + ".jpg";
+        return "https://farm" + photoData.farm + ".static.flickr.com/" + photoData.server + "/" + (photoData.primary || photoData.id) + "_" + photoData.secret + size + ".jpg";
     }
     function getPhotosetUrl(userid, photosetId)
     {

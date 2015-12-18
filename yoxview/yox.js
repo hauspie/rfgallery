@@ -209,10 +209,10 @@
     },
     Regex: {
         data: {
-            picasa: /http:\/\/(?:www\.)?picasaweb\.google\..*/i,
-            flickr: /http:\/\/(?:www\.)?flickr.com/i,
-            smugmug: /http:\/\/.*\.smugmug.com/i,
-            youtube: /^http:\/\/(?:www\.)?youtube.com\//
+            picasa: /https:\/\/(?:www\.)?picasaweb\.google\..*/i,
+            flickr: /https:\/\/(?:www\.)?flickr.com/i,
+            smugmug: /https:\/\/.*\.smugmug.com/i,
+            youtube: /^https:\/\/(?:www\.)?youtube.com\//
         },
         flash: /^(.*\.(swf))(\?[^\?]+)?/i,
         flashvideo: /^(.*\.(flv|f4v|f4p|f4a|f4b|aac))(\?[^\?]+)?/i,
@@ -267,7 +267,7 @@
     Support: {
         rgba: function()
         {
-            // From http://leaverou.me/2009/03/check-whether-the-browser-supports-rgba-and-other-css3-values/
+            // From https://leaverou.me/2009/03/check-whether-the-browser-supports-rgba-and-other-css3-values/
 	        if(!('result' in arguments.callee))
 	        {
 	            var element = document.createElement('div');

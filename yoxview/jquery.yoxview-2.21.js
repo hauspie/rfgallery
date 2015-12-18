@@ -1,12 +1,12 @@
 ﻿/*!
  * jquery.yoxview
  * jQuery image gallery viewer
- * http://yoxigen.com/yoxview
+ * https://yoxigen.com/yoxview
  *
  * Copyright (c) 2010 Yossi Kolesnicov
  *
  * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  *
  * Date: 13th November, 2010
  * Version : 2.2
@@ -125,8 +125,8 @@
             mediaLoader,
             mediaPanelClass = "yoxview_mediaPanel",
             mediaProviderUrls = {
-                vimeo: "http://vimeo.com/api/oembed.json",
-                myspace: "http://vids.myspace.com/index.cfm?fuseaction=oembed"
+                vimeo: "https://vimeo.com/api/oembed.json",
+                myspace: "https://vids.myspace.com/index.cfm?fuseaction=oembed"
             },
             menuHidePosition = -42,
             menuPanel,
@@ -502,7 +502,7 @@
     				
                     var flashPanel = $("<div>", {
                         className: "yoxview_element",
-                        html: "<div class='yoxview_error'>Please install the latest version of the <a href='http://www.adobe.com/go/getflashplayer' target='_blank'>Flash player</a> to view content</div>"
+                        html: "<div class='yoxview_error'>Please install the latest version of the <a href='https://www.adobe.com/go/getflashplayer' target='_blank'>Flash player</a> to view content</div>"
                     });
                     var flashData = matchFlashVideo 
                         ? Yox.flashVideoPlayers[options.flashVideoPlayer](
@@ -2050,7 +2050,7 @@
         function loadMediaFromProvider(provider, url, availableSize, onLoad, onError)
         {
             jQuery.jsonp({
-                url: (mediaProviderUrls[provider] || "http://oohembed.com/oohembed/"),
+                url: (mediaProviderUrls[provider] || "https://oohembed.com/oohembed/"),
                 data: jQuery.extend({
                     "url" : url,
                     "format": "json"

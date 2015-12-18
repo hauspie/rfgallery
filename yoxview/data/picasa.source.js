@@ -1,11 +1,11 @@
 ﻿/*!
  * Yox Picasa plugin
- * http://yoxigen.com/yoxview/
+ * https://yoxigen.com/yoxview/
  *
  * Copyright (c) 2010 Yossi Kolesnicov
  *
  * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  *
  * Date: 13th November, 2010
  * Version : 1.55
@@ -13,13 +13,13 @@
 function yox_picasa()
 {
     var $ = jQuery;
-    var picasaRegex = /http:\/\/picasaweb\.google\.\w+\/([^\/#\?]+)\/?([^\/#\?]+)?(\?([^#]*))?/
+    var picasaRegex = /https:\/\/picasaweb\.google\.\w+\/([^\/#\?]+)\/?([^\/#\?]+)?(\?([^#]*))?/
     var self = this;
     
     this.getImagesData = function(options, callback)
     {
         var defaults = {
-            url: "http://picasaweb.google.com/data/feed/api/",
+            url: "https://picasaweb.google.com/data/feed/api/",
             setThumbnail: true,
             setSingleAlbumThumbnails: true,
             setTitle: true, // Whether to add a header with user and/or album name before thumbnails

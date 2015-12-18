@@ -1,7 +1,7 @@
 ﻿/*!
  * jquery.yoxthumbs
  * jQuery thumbnails plugin
- * http://yoxigen.com/
+ * https://yoxigen.com/
  *
  * Copyright (c) 2010 Yossi Kolesnicov
  *

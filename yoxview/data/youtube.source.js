@@ -1,11 +1,11 @@
 ﻿/*!
  * Yox YouTube plugin
- * http://yoxigen.com/yoxview/
+ * https://yoxigen.com/yoxview/
  *
  * Copyright (c) 2010 Yossi Kolesnicov
  *
  * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  *
  * Date: 13th November, 2010
  * Version : 1.0
@@ -13,19 +13,19 @@
 function yox_youtube()
 {
     var $ = jQuery,
-        youtubeRegex = /^http:\/\/(?:www\.)?youtube.com\//,
+        youtubeRegex = /^https:\/\/(?:www\.)?youtube.com\//,
         self = this,
         ytRegex = {
-            singleVideo: /^http:\/\/(?:www\.)?youtube.com\/watch\?v=([^\&]+)(.*)?/,
-            playlist: /^http:\/\/(?:www\.)?youtube.com\/(?:view_play_list|my_playlists)\?p=([^\&]+)(.*)?/,
-            user: /^http:\/\/(?:www\.)?youtube.com\/user\/([^\?]+)(?:\?(.*))?/,
-            search: /^http:\/\/(?:www\.)?youtube.com\/results\?(.*)/
+            singleVideo: /^https:\/\/(?:www\.)?youtube.com\/watch\?v=([^\&]+)(.*)?/,
+            playlist: /^https:\/\/(?:www\.)?youtube.com\/(?:view_play_list|my_playlists)\?p=([^\&]+)(.*)?/,
+            user: /^https:\/\/(?:www\.)?youtube.com\/user\/([^\?]+)(?:\?(.*))?/,
+            search: /^https:\/\/(?:www\.)?youtube.com\/results\?(.*)/
         };
 
     this.getImagesData = function(options, callback)
     {
         var defaults = {
-            url: "http://gdata.youtube.com/feeds/api/videos",
+            url: "https://gdata.youtube.com/feeds/api/videos",
             setThumbnails: true,
             setSingleAlbumThumbnails: true,
 			alt: 'jsonc',
@@ -98,10 +98,10 @@ function yox_youtube()
                         datasourceOptions.url += "/" + urlMatch[1];
                         break;
                     case "playlist":
-                        datasourceOptions.url = "http://gdata.youtube.com/feeds/api/playlists/" + urlMatch[1];
+                        datasourceOptions.url = "https://gdata.youtube.com/feeds/api/playlists/" + urlMatch[1];
                         break;
                     case "user":
-                        datasourceOptions.url = "http://gdata.youtube.com/feeds/api/users/" + urlMatch[1] + "/uploads";
+                        datasourceOptions.url = "https://gdata.youtube.com/feeds/api/users/" + urlMatch[1] + "/uploads";
                         break;
                     default:
                         break;
