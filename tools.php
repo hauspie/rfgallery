@@ -27,11 +27,10 @@ define('DEFAULT_ALBUM_THUMBNAIL', "pics/folder-photo2.png");
 function PrintHead()
 {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<html> 
 <head> 
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
-  <meta name="Generator" content="rfGallery. http://git.fairy-project.org/?p=rfGallery.git" />
+  <meta name="Generator" content="rfGallery. https://github.com/hauspie/rfgallery" />
   <script type="text/javascript" src="yoxview/yoxview-init.js"></script>
   <link rel="stylesheet" href="css/style.css" type="text/css" /> 
   <title><?php echo HOME_PAGE_NAME ?></title>
