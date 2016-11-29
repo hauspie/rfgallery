@@ -84,6 +84,7 @@ fi
 # get absolute path names
 SOURCE=`(cd "$SOURCE" && pwd)`
 DESTINATION=`(cd "$DESTINATION" && pwd)`
+SCRIPT="$(cd $(dirname $0) && pwd)/$(basename $0)"
 
 cd "$SOURCE"
 for i in *
@@ -92,7 +93,7 @@ do
     if test -d "$i"
     then
 	mkdir -p "$DESTINATION/$i"
-	$0 "$SOURCE/$i" "$DESTINATION/$i" "$SIZE" "$4"
+	$SCRIPT "$SOURCE/$i" "$DESTINATION/$i" "$SIZE" "$4"
     fi
     if ! test -r "$DESTINATION/$i"
     then
