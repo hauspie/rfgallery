@@ -26,17 +26,17 @@ define('DEFAULT_ALBUM_THUMBNAIL', "pics/folder-photo2.png");
 
 function PrintHead()
 {
-?>
-<html> 
-<head> 
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
-  <meta name="Generator" content="rfGallery. https://github.com/hauspie/rfgallery" />
-  <script type="text/javascript" src="yoxview/yoxview-init.js"></script>
-  <link rel="stylesheet" href="css/style.css" type="text/css" /> 
-  <title><?php echo HOME_PAGE_NAME ?></title>
-  </head>
-<body>
-<div id='content'>
+   ?>
+   <html> 
+   <head> 
+   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+   <meta name="Generator" content="rfGallery. https://github.com/hauspie/rfgallery" />
+   <script type="text/javascript" src="yoxview/yoxview-init.js"></script>
+   <link rel="stylesheet" href="css/style.css" type="text/css" /> 
+   <title><?php echo HOME_PAGE_NAME ?></title>
+   </head>
+   <body>
+   <div id='content'>
 <?php
 }
 
@@ -94,13 +94,13 @@ function get_files($Directory)
    while (false !== ($file = readdir($d)))
    {
       if ($file[0] == '.')
-	 continue;
+         continue;
       if (is_dir("$Directory/$file"))
-	{
-	  $files["dirs"][] = $file;
-	}
+      {
+         $files["dirs"][] = $file;
+      }
       else if (strstr(strtolower($file), ".jpg"))
-	$files["files"][] = $file;
+         $files["files"][] = $file;
    }
    rsort($files["dirs"]);
    sort($files["files"]);
