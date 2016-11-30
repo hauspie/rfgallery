@@ -30,9 +30,16 @@
 # convert one picture, same parameters
 function convert_picture()
 {
-    file "$1" | grep image >& /dev/null || return 1
-    echo "Generating $2 from $1 (size $3)"
-    convert -thumbnail "x$3" "$1" "$2"
+    if file "$1" | grep -qi image
+    then
+        echo "Generating $2 from $1 (size $3)"
+        convert -thumbnail "x$3" "$1" "$2"
+    elif file "$1" | grep -qi MP4
+    then
+        width=`perl -e print int($3 * 1.77)`
+        echo "Generating video thumbnail $2 from $1 (size ${width}x$3)"
+        ffmpeg -i "$1" -s ${width}x$3 -vframes 1 "$2"
+    fi
 }
 
 # usage
