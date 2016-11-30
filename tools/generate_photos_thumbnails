@@ -36,9 +36,10 @@ function convert_picture()
         convert -thumbnail "x$3" "$1" "$2"
     elif file "$1" | grep -qi MP4
     then
-        width=`perl -e print int($3 * 1.77)`
+        width=`perl -e "print int($3 * 1.5)"`
+        width=`perl -e "print $width + $width % 2"`
         echo "Generating video thumbnail $2 from $1 (size ${width}x$3)"
-        ffmpeg -i "$1" -s ${width}x$3 -vframes 1 "$2"
+        ffmpeg -i "$1" -s ${width}x$3 -vframes 1 "$2.jpg"
     fi
 }
 
