@@ -23,7 +23,10 @@ require_once("config.php");
 PrintHead();
 
 # Get current directory from GET variable
-$Dir = $_GET["Dir"];
+if (isset($_GET["Dir"]))
+   $Dir = $_GET["Dir"];
+else
+   $Dir = "";
 $Dir = preg_replace("/\/+/", "/", $Dir);
 $DirUrl = $PHOTOS_DIR . "$Dir";
 

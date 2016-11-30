@@ -76,6 +76,26 @@ function encode_filename($FileName)
    return preg_replace("/%2F/i", "/", $enc);
 }
 
+function is_image($FileName)
+{
+   if (strstr(strtolower($FileName), ".jpg"))
+      return true;
+   return false;
+}
+
+function is_video($FileName)
+{
+   if (strstr(strtolower($FileName), ".mp4"))
+      return true;
+   return false;
+}
+
+
+function is_accepted_file($FileName)
+{
+   return is_image($FileName) || is_video($FileName);
+}
+
 function get_files($Directory)
 {
   
@@ -99,7 +119,7 @@ function get_files($Directory)
       {
          $files["dirs"][] = $file;
       }
-      else if (strstr(strtolower($file), ".jpg"))
+      else if (is_accepted_file($file))
          $files["files"][] = $file;
    }
    rsort($files["dirs"]);
@@ -131,7 +151,7 @@ function get_dir_thumbnail_recursive($dir, $depth)
 	}
     }
   closedir($d);
-  return DEFAUTL_ALBUM_THUMBNAIL;
+  return DEFAULT_ALBUM_THUMBNAIL;
 }
 
 function get_dir_thumbnail($dir)
@@ -149,10 +169,15 @@ function get_thumbnail($file, $dir)
    $thefile = encode_filename($file);
    $thedir = encode_filename($dir);
 
+   $ret = "";
 
-   if (strstr(strtolower($file), ".jpg"))
+   if (is_image($file))
    {
       return "<a href=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\"><img alt=\"$file\" src=\"$URL_BASE/$THUMBS_DIR$thedir/$thefile\" /></a>";
+   }
+   else if (is_video($file))
+   {
+      return "<video width=\"380\" controls> <source src=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\" type=\"video/mp4\" /> </video>";
    }
    else if (is_dir("$PHOTOS_DIR/$dir/$file"))
    {
@@ -163,7 +188,6 @@ function get_thumbnail($file, $dir)
      else
        $ret = "nirf";
    }
-   
    $ret = $ret . "<p class=\"dir_link\"><a href=\"$URL_BASE/?Dir=$thedir/$thefile\">$file</a></p>";
    return $ret;
 }
