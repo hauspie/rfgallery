@@ -17,6 +17,9 @@
  * Author: Michael Hauspie <mickey AT fairy-project DOT org>
  */
 
+/* Comment for development mode or change to whatever you want */
+error_reporting(0);
+
 /* The folder where the original photos are 
  * relative to document root
  */
@@ -39,4 +42,18 @@ define("FOOTER_MESSAGE", "Gallery provided by <a href=\"https://github.com/hausp
  */
 $ALBUM_THUMBNAIL_MAX_DEPTH = 1;
 
+/* Size of the bounding box of the auto-generated thumbnails.
+   Here the thumbnail will always fit the 390x260 box defined in the css file
+   Original ratio of the photo is kept.
+ */
+$AUTO_THUMB_WIDTH  = 390;
+$AUTO_THUMB_HEIGHT = 300;
+
+/* The filter to use for generating thumbnails.
+   The filters are from https://secure.php.net/manual/en/imagick.constants.php#imagick.constants.filters.
+   Imagick::FILTER_POINT is fast but ugly
+   Imagick::FILTER_LANCZOS is nice but slow
+   Imagick::FILTER_HERMITE is a compromise between speed and quality
+*/
+$AUTO_THUMB_FILTER = Imagick::FILTER_POINT;
 ?>

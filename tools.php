@@ -138,18 +138,18 @@ function get_dir_thumbnail_recursive($dir, $depth)
 
   $d = opendir($dir);
   if ($d)
-    {
-      while (false !== ($f = readdir($d)))
-	{
-	  if (strstr(strtolower($f), ".jpg"))
-	    return encode_filename("$dir/$f");
-	  if (is_dir("$dir/$f") && $f[0] != ".")
+  {
+     while (false !== ($f = readdir($d)))
+     {
+        if (strstr(strtolower($f), ".jpg"))
+           return encode_filename("$dir/$f");
+        if (is_dir("$dir/$f") && $f[0] != ".")
 	    {
-	      if ( $ALBUM_THUMBNAIL_MAX_DEPTH - $depth > -1)
-		return get_dir_thumbnail_recursive("$dir/$f",$depth + 1);
+           if ( $ALBUM_THUMBNAIL_MAX_DEPTH - $depth > -1)
+              return get_dir_thumbnail_recursive("$dir/$f",$depth + 1);
 	    }
-	}
-    }
+     }
+  }
   closedir($d);
   return DEFAULT_ALBUM_THUMBNAIL;
 }
@@ -159,20 +159,88 @@ function get_dir_thumbnail($dir)
   return get_dir_thumbnail_recursive($dir, 1);
 }
 
+function create_folders($path)
+{
+   /* Creates all needed folders so that the folder $path exists */
+   return mkdir($path, 0777, TRUE);
+}
+
+function check_and_generate_thumbnail($file, $dir)
+{
+   global $PHOTOS_DIR;
+   global $THUMBS_DIR;
+   global $AUTO_THUMB_HEIGHT;
+   global $AUTO_THUMB_WIDTH;
+   global $AUTO_THUMB_FILTER;
+
+   /* This function checks if $file exists and if not, generate a
+    * thumbnail using imagick */
+   $thumb_dir  = "$THUMBS_DIR/$dir";
+   $thumb_path = "$thumb_dir/$file";
+   /* First create folders if needed */
+   if (!is_dir($thumb_dir))
+   {
+      if (!create_folders($thumb_dir))
+         return;
+   }
+   if (is_file($thumb_path))
+      return;
+   /* file does not exists (or at least is not a regular file) generate thumbnail */
+   $thumb = new Imagick("$PHOTOS_DIR/$dir/$file");
+   if (!$thumb)
+      return;
+
+   $width = $thumb->getImageWidth();
+   $height = $thumb->getImageHeight();
+   $ratio = $width / $height;
+
+   
+   $new_width = $new_height = 1;
+   // Landscape
+   if ($ratio > 1)
+   {
+      $new_width = $AUTO_THUMB_WIDTH;
+      $new_height = $new_width / $ratio;
+      // If ratio is not adapted to the defined thumbnail bounding box, we have to adapt
+      if ($new_height > $AUTO_THUMB_HEIGHT)
+      {
+         $new_height = $AUTO_THUMB_HEIGHT;
+         $new_width =  $ratio * $new_height;
+      }
+   }
+   // Portrait 
+   if ($ratio < 1)
+   {
+      $new_height = $AUTO_THUMB_HEIGHT;
+      $new_width = $new_height * $ratio;
+      // If ratio is not adapted to the defined thumbnail bounding box, we have to adapt
+      if ($new_width > $AUTO_THUMB_WIDTH)
+      {
+         $new_width = $AUTO_THUMB_WIDTH;
+         $new_height = $new_width / $ratio;
+      }
+   }
+   $thumb->resizeImage($new_width,$new_height, $AUTO_THUMB_FILTER,1);
+      
+   $thumb->writeImage($thumb_path);
+   $thumb->destroy();
+}
+
 function get_thumbnail($file, $dir)
 {
    global $PHOTOS_DIR;
    global $URL_BASE;
    global $THUMBS_DIR;
 
-
    $thefile = encode_filename($file);
    $thedir = encode_filename($dir);
 
    $ret = "";
 
+   
    if (is_image($file))
    {
+      check_and_generate_thumbnail($file, $dir);
       return "<a href=\"$URL_BASE/$PHOTOS_DIR/$thedir/$thefile\"><img alt=\"$file\" src=\"$URL_BASE/$THUMBS_DIR$thedir/$thefile\" /></a>";
    }
    else if (is_video($file))
