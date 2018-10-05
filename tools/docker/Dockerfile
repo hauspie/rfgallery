@@ -1,6 +1,6 @@
 FROM php:apache-stretch
 
-RUN apt-get update && apt-get -y -f install imagemagick libmagickwand-dev git ffmpeg
+RUN apt-get update && apt-get -y -f install imagemagick libmagickwand-dev git ffmpeg && rm -rf /var/lib/apt/lists/*
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 WORKDIR /var/www/html
