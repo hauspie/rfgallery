@@ -63,9 +63,10 @@ Build the image using the provided `Dockerfile`
     $ docker build -t rfgallery tools/docker
 
 The image uses two volumes:
-    * `/var/www/html/photos` for putting your photos
-    * `/var/www/html/thumbs` where the thumbnails will be generated
-      (you can generate yourself using an external tool)
+
+* `/var/www/html/photos` for putting your photos
+* `/var/www/html/thumbs` where the thumbnails will be generated
+  (you can generate yourself using an external tool)
 
 The image will use the default configuration file. If you want to
 customize it, you can simply do a bind mount to
