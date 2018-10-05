@@ -30,30 +30,30 @@ You simply have to put it in a virtual host with index.php as index
 
 Here is an example of apache2 configuration for this tool to work:
 
-        <VirtualHost *:80>
-            ServerAdmin webmaster@fairy-project.org
-            ServerName www.fairy-project.org
-            ServerAlias www
-        
-            DocumentRoot /srv/www/photos
-            DirectoryIndex index.php
-        
-            <Directory /srv/www/photos>
-                Options -Indexes FollowSymLinks MultiViews
-                AllowOverride Indexes
-                Order allow,deny
-                allow from all
-            </Directory>
-        
-            ErrorLog /var/log/apache2/rfgallery-error.log
-        
-            # Possible values include: debug, info, notice, warn, error, crit,
-            # alert, emerg.
-            LogLevel warn
-        
-            CustomLog /var/log/apache2/rfgallery-access.log combined
-            ServerSignature Off
-        </VirtualHost>
+    <VirtualHost *:80>
+        ServerAdmin webmaster@fairy-project.org
+        ServerName www.fairy-project.org
+        ServerAlias www
+    
+        DocumentRoot /srv/www/photos
+        DirectoryIndex index.php
+    
+        <Directory /srv/www/photos>
+            Options -Indexes FollowSymLinks MultiViews
+            AllowOverride Indexes
+            Order allow,deny
+            allow from all
+        </Directory>
+    
+        ErrorLog /var/log/apache2/rfgallery-error.log
+    
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+    
+        CustomLog /var/log/apache2/rfgallery-access.log combined
+        ServerSignature Off
+    </VirtualHost>
 
 Installation with docker
 ------------------------
@@ -80,32 +80,32 @@ For example, to run a container that will listen on the host's tcp port 80:
 
 If you use `docker-compose`, you can adapt this:
 
-        version: '2'
-        services:
-          traefik:
-            image: traefik
-            command: --api --docker
-            environment:
-              TZ: "Europe/Paris"
-            ports:
-              - "80:80"
-              - "8080:8080"
-            volumes:
-              - "/var/run/docker.sock:/var/run/docker.sock"
-          photos:
-            image: rfgallery
-            environment:
-              TZ: "Europe/Paris"
-            volumes:
-              - "photos:/var/www/html/photos"
-              - "thumbs:/var/www/html/thumbs"
-              - "./config.php:/var/www/html/config.php:ro"
-            labels:
-              - "traefik.frontend.rule=Host:photos.example.com"
-              - "traefik.port=80"
+    version: '2'
+    services:
+      traefik:
+        image: traefik
+        command: --api --docker
+        environment:
+          TZ: "Europe/Paris"
+        ports:
+          - "80:80"
+          - "8080:8080"
         volumes:
-          photos:
-          thumbs:
+          - "/var/run/docker.sock:/var/run/docker.sock"
+      photos:
+        image: rfgallery
+        environment:
+          TZ: "Europe/Paris"
+        volumes:
+          - "photos:/var/www/html/photos"
+          - "thumbs:/var/www/html/thumbs"
+          - "./config.php:/var/www/html/config.php:ro"
+        labels:
+          - "traefik.frontend.rule=Host:photos.example.com"
+          - "traefik.port=80"
+    volumes:
+      photos:
+      thumbs:
         
 This examples shows how you can use traefik as reverse proxy (check
 traefik documentation to see how you can benefit of automatic letsencrypt
@@ -117,8 +117,8 @@ Configuration
 All you have to do is to setup the photo and thumbnails folder in the
 config.php (a config.php.sample file is given for reference)
 
-        $PHOTOS_DIR = "photos";
-        $THUMBS_DIR = "thumbs";
+    $PHOTOS_DIR = "photos";
+    $THUMBS_DIR = "thumbs";
         
 The path is relative to the document root
 
@@ -134,13 +134,13 @@ webserver must have write access)
 
 You can also modify the name of the gallery home page in the same file.
         
-        define(HOME_PAGE_NAME, "Photos");
+    define(HOME_PAGE_NAME, "Photos");
 
 This name is used for the page titles and as the first navigation link.
 
 You can change the copyright notice by changing the define:
         
-        define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://github.com/hauspie/rfgallery\">rfGallery</a>");
+    define(FOOTER_MESSAGE, "Gallery provided by <a href=\"http://github.com/hauspie/rfgallery\">rfGallery</a>");
 
 
 Security
@@ -150,18 +150,18 @@ access to your gallery, you must use apache authentication mechanism.
 You can add a `.htaccess` file at the document root.
 For example:
 
-        AuthName rfGallery
-        AuthUserFile /var/www/html/.htpasswd
-        AuthType Basic
-        require valid-user
+    AuthName rfGallery
+    AuthUserFile /var/www/html/.htpasswd
+    AuthType Basic
+    require valid-user
 
 and use `htpasswd` to create the `.htpasswd` file.  Please note that if
 you do not use https, login and password are transmitted in plain text!
 
 If you use docker-compose and traefik as reverse proxy, you can add a traefik label to the rfgallery service:
 
-        - 'traefik.frontend.auth.basic=login:$5$salt$Gcm6FsVtF/Qa77ZKD.iwsJlCVPY0XSMgLJL0Hnww/c1'
+    - 'traefik.frontend.auth.basic=login:$5$salt$Gcm6FsVtF/Qa77ZKD.iwsJlCVPY0XSMgLJL0Hnww/c1'
 
 The password hash can be generated using the crypt call (man crypt), for exemple in perl
 
-        perl -e 'print crypt("password", "\$5\$salt\$\$") , "\n"'
+    perl -e 'print crypt("password", "\$5\$salt\$\$") , "\n"'
