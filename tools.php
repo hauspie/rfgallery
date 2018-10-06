@@ -197,7 +197,7 @@ function check_and_generate_thumbnail($file, $dir)
    
    $new_width = $new_height = 1;
    // Landscape
-   if ($ratio > 1)
+   if ($ratio > 1 || ($width == $height))
    {
       $new_width = $AUTO_THUMB_WIDTH;
       $new_height = $new_width / $ratio;
