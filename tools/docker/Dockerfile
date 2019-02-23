@@ -1,6 +1,8 @@
 FROM php:apache-stretch
 
 RUN apt-get update && apt-get -y -f install imagemagick libmagickwand-dev git ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install opcache
+RUN pecl install apcu && docker-php-ext-enable apcu
 RUN pecl install imagick && docker-php-ext-enable imagick
 
 
