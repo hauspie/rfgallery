@@ -149,8 +149,8 @@ function get_dir_thumbnail_recursive($dir, $depth)
               return get_dir_thumbnail_recursive("$dir/$f",$depth + 1);
 	    }
      }
+     closedir($d);
   }
-  closedir($d);
   return DEFAULT_ALBUM_THUMBNAIL;
 }
 
