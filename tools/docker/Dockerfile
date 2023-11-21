@@ -1,4 +1,4 @@
-FROM php:apache-stretch
+FROM php:apache
 
 RUN apt-get update && apt-get -y -f install imagemagick libmagickwand-dev git ffmpeg && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install opcache
